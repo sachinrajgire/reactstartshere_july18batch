@@ -1,6 +1,6 @@
 import  React,{ useState, useEffect, Fragment} from 'react';
 import './App.css';
-import importedData from './Student_Data.json' ;
+// import importedData from './Student_Data.json' ;
 import Card from './Card.jsx'
 import NewEntry from './NewEntry.jsx'
 import { v4 as uuidv4 } from 'uuid';
@@ -11,45 +11,35 @@ import {
   Link
 } from "react-router-dom";
 import axios from 'axios';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
+// hydrating - some set of data --
+// clear rehydraate
 function App() {
 
 const [favs, setFavs] =useState([])
-const [data, setData] =useState([])
+const [data, setData] =useState([]) 
+console.log(data,'DATA');
 const [recentlyDeleted, setRecentlyDeleted] =useState([])
 const [universityName, setUniversityName] =useState("")
 const [specialization, setSpecialization] =useState("")
-const [graduationYear, setGraduationYear] =useState("")
-const [employer, setEmployer] =useState("")
-const [jobTitle, setJobTitle] =useState("")
-const [jobStartDate, setJobStartDate] =useState("")
-const [careerUrl, setCareerUrl] =useState("")
-console.log(universityName,'UNIVERSITY NAME');
-// console.log(recentlyDeleted ,'RECENTLY DELETED');
- ///single source of truth
-// console.log(data,'DATA');
+const [isLoading, setIsLoading] =useState(true)
+const [searchString,setSearchString] =useState("")
+const [isSearchEnabled,setIsSearchEnabled] =useState(false)
+const [currentPage,setCurrentPage] = useState(1)
 
-// ComponentDidMount-- Runs only after component has mounted 
-useEffect(()=>{
-console.log('COMPONENT DID MOUNT')
-let newData =[...importedData]
-newData= newData.map(i=>{
-  return {...i,id:uuidv4()}
-})
-setData(newData)
-  },[])
- 
-  // Promises
+console.log(currentPage,'currentPage');
+
 useEffect(()=>{
 axios.get("http://localhost:4000/getallentries")
-.then(resp => console.log(resp,'RESPONSE'))
-.catch (e=> console.log(e))
-
-  },[])
-
-
- 
-
+.then(resp =>{
+  setIsLoading(false)
+  setData(resp.data)
+})
+.catch (e=> {
+  setIsLoading (false)
+})
+},[])
 
 function saveFavorites (employer) {
 //im
@@ -108,8 +98,71 @@ copydata.unshift(objectTobePushed)
 setData(copydata)
 
 }
+//convert everything to lowercase
+function handleSearch () {
+  setIsSearchEnabled(true)
+  // let copyData = [...data]
+  // let filteredData = copyData.filter((j)=>{
+  //   // console.log(j.Employer.includes(searchString),'RESULTS')
+  //   if(j.Employer.toLowerCase().includes(searchString.toLowerCase())
+  //   || (j.Job_Title.toLowerCase().includes(searchString.toLowerCase()))
+    
+  //   ){
+  //     return true
+  //   }
+  
+  // })
+  // return filteredData
+  
+}
+//solution 
 
-let names = data.map((i)=>{
+function handleClear () {
+  setSearchString("")
+  //Refetch from the network 
+//   axios.get("http://localhost:4000/getallentries")
+// .then(resp =>{
+//   setIsLoading(false)
+//   setData(resp.data)
+// })
+// .catch (e=> {
+//   setIsLoading (false)
+// })
+}
+
+function runFilters() {
+  let copyData = [...data]
+
+   copyData = copyData.filter((j)=>{
+    // console.log(j.Employer.includes(searchString),'RESULTS')
+    if(j.Employer.toLowerCase().includes(searchString.toLowerCase())
+    || (j.Job_Title.toLowerCase().includes(searchString.toLowerCase()))
+    ){
+      return true
+    }
+  })
+  return copyData
+  
+}
+
+function calculatePages () {
+  const len = data.length // 68
+  const entriesPerPage = 10
+  const pages = len < entriesPerPage ? 1 : Math.ceil(len / entriesPerPage);
+let finalPages= []
+for (let i=1;i<=pages;i++){
+   finalPages.push(i)
+}
+console.log(finalPages)
+return finalPages
+  
+}
+
+
+let names =
+ data
+ .slice(((currentPage-1)*10)+1,((currentPage-1)*10)+11)
+ .map((i)=>{
   const {Employer,University_Name ,id} = i
   return (
     <div className="container" key={i.id}>
@@ -121,11 +174,15 @@ let names = data.map((i)=>{
       <button disabled={favs.includes(Employer)} onClick={()=>saveFavorites(Employer)}>Favorite</button>
       <button disabled={!favs.includes(Employer)}onClick={()=>handleUnFavorite(Employer)}>UnFavorite</button>
       <button onClick={()=>handleDelete(id)}>Delete</button>
-    
     </div>
   )
 })
-  return (
+// false
+if(isLoading) {
+  return  <LinearProgress />
+}
+/////will not run this code 
+return (
      <div className="App">
     <Router>
     <div>
@@ -143,23 +200,42 @@ let names = data.map((i)=>{
           />
         </Route>
       </Switch>
-     
     </div>
   </Router>
-  Recently Deleted Items : 
-    
-    <button onClick={(e)=>handleSubmit(e)}>SUBMIT </button>
+  {/* Recently Deleted Items :  */}
+  <label>Filter your results</label>
+  <input type="text" value={searchString} onChange={(e)=>setSearchString(e.target.value)}></input>
+  <button onClick={(e)=>handleSearch(e)}>Search </button>
+  <button onClick={(e)=>handleClear(e)}>Clear </button>
+    {/* <button onClick={(e)=>handleSubmit(e)}>SUBMIT </button>
     {recentlyDeleted.map(i=>i.Employer).join(", ")}
       <button onClick={()=>handleDelete()}>ADD NEW </button>
-    {`You current favorite are ${favs.join(",")}`}
+    {`You current favorite are ${favs.join(",")}`} */}
+<div>
+{calculatePages().map((i,idx)=>{
+  console.log(`Page number is ${i}`);
+  console.log(`Index  is ${idx}`);
+    return (
+      <span onClick={()=>setCurrentPage(i)}>
+        {i}{" "}
+        </span>
+    )
+  })}
+  </div>
+
   {names}
+  
  
 </div>
  
   );
 }
 
-
-
 export default App;
+
+
+// create input box 
+// save the input ( state)
+// filter the data before mapping
+
 
