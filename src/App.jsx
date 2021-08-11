@@ -3,6 +3,7 @@ import './App.css';
 // import importedData from './Student_Data.json' ;
 import Card from './Card.jsx'
 import NewEntry from './NewEntry.jsx'
+import Movies from './Movies/Movies.js'
 import { v4 as uuidv4 } from 'uuid';
 import {
   BrowserRouter as Router,
@@ -187,32 +188,36 @@ return (
     <Router>
     <div>
       <nav>
-        <ul>
-          <li> <Link to="/" >Home</Link></li>
-          <li><Link to="/newentry">Create New Entry</Link></li>
+        <ul style={{display:"flex"}}>
+          <li> <Link to="/" >Home</Link></li>{" "}
+          <li><Link to="/newentry">Create New Entry</Link></li>{" "}
+          <li><Link to="/movies">Movies</Link></li>{" "}
         </ul>
       </nav>
       <Switch>
-        <Route path="/newentry" exact>
+    <Route path="/newentry" exact>
           <NewEntry 
           setUniversityName={setUniversityName}
           setSpecialization={setSpecialization}
           />
         </Route>
+    {/* <Route path="/movies" exact> <Movies/></Route> */}
+    <Route path="/movies" component={Movies}/>
+        
       </Switch>
     </div>
   </Router>
   {/* Recently Deleted Items :  */}
-  <label>Filter your results</label>
+  {/* <label>Filter your results</label>
   <input type="text" value={searchString} onChange={(e)=>setSearchString(e.target.value)}></input>
   <button onClick={(e)=>handleSearch(e)}>Search </button>
-  <button onClick={(e)=>handleClear(e)}>Clear </button>
+  <button onClick={(e)=>handleClear(e)}>Clear </button> */}
     {/* <button onClick={(e)=>handleSubmit(e)}>SUBMIT </button>
     {recentlyDeleted.map(i=>i.Employer).join(", ")}
       <button onClick={()=>handleDelete()}>ADD NEW </button>
     {`You current favorite are ${favs.join(",")}`} */}
 <div>
-{calculatePages().map((i,idx)=>{
+{/* {calculatePages().map((i,idx)=>{
   console.log(`Page number is ${i}`);
   console.log(`Index  is ${idx}`);
     return (
@@ -220,10 +225,10 @@ return (
         {i}{" "}
         </span>
     )
-  })}
+  })} */}
   </div>
 
-  {names}
+  {/* {names} */}
   
  
 </div>
