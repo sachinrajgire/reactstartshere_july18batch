@@ -9,7 +9,7 @@ const Movies = props => {
 
   const [searchString, setSearchString] =useState("")
   const [data, setData] =useState([])
-  const [nominated, setNominated] =useState([])
+  const [nominated, setNominated] =useState([]) 
 
   console.log(nominated,'NOMINATED');
 
@@ -41,7 +41,11 @@ useEffect(()=>{
          </div>
 
          <div class="nominations">
-          <Nominations />
+          <Nominations 
+          data={data}
+          nominated={nominated}
+          setNominated={setNominated}
+          />
          </div>
 
         </div>

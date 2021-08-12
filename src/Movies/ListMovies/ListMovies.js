@@ -6,6 +6,10 @@ const ListMovies = ({data,nominated,setNominated}) => {
     
 
 function handleAddNomination (imdbId) {
+
+    if(nominated.length >= 5) {
+   return  alert('Maximum nominations reached')
+    }
 let copyNominated= [...nominated]
 if(!nominated.includes(imdbId)){
 copyNominated.push(imdbId)
