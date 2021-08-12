@@ -1,0 +1,9 @@
+.moviescontainer {
+display: flex;
+flex-wrap: wrap;
+}
+
+.cardcontainer {
+margin:10px;
+
+}

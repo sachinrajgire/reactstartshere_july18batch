@@ -2,11 +2,16 @@ import axios from 'axios';
 import React ,{useEffect, useState} from 'react';
 import Hero from './Hero/Hero';
 import ListMovies from './ListMovies/ListMovies';
+import Nominations from './Nominations/Nominations';
+import "./movies.css"
 
 const Movies = props => {
 
   const [searchString, setSearchString] =useState("")
   const [data, setData] =useState([])
+  const [nominated, setNominated] =useState([])
+
+  console.log(nominated,'NOMINATED');
 
 console.log(data,'data');
 
@@ -18,20 +23,27 @@ useEffect(()=>{
 },[searchString])
 
     return (
-        <div>
+        <div class='maincontainer'>
+          <div class="hero">
           <Hero 
           searchString={searchString}
           setSearchString={setSearchString}
           placeholder="Enter your movie search here"
           />
+          </div>
           
-        <div>
+          <div class="listmovies">
           <ListMovies
           data = {data}
+          setNominated={setNominated}
+          nominated={nominated}
+          />
+         </div>
 
-         />
-          {/* <Nominations /> */}
-          </div>
+         <div class="nominations">
+          <Nominations />
+         </div>
+
         </div>
     );
 };

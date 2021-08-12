@@ -1,23 +1,42 @@
 import React from 'react';
 import Card from '../Card/Card' ;
+import './list-movies.css'
 
-const ListMovies = ({data}) => {
+const ListMovies = ({data,nominated,setNominated}) => {
     
+
+function handleAddNomination (imdbId) {
+let copyNominated= [...nominated]
+if(!nominated.includes(imdbId)){
+copyNominated.push(imdbId)
+}
+setNominated(copyNominated)
+}
+
     let movies = data && data.map(i=>{
         
         return (
-            <div>
+            <div key={i.imdbID} className='cardcontainer'>
              <Card 
              title={i.Title}
-             year={i.Year}
+             year={parseInt(i.Year)}
              poster={i.Poster}
-             />   
+             alt={i.Title}
+             array1prop={[3,4]}
+             object1prop={{name:"sachin"}}
+             classname="card-cover-marketing"
+             color="red"
+             /> 
+
+            <button disabled={nominated.includes(i.imdbID)} onClick={()=>handleAddNomination(i.imdbID)}>
+                {nominated.includes(i.imdbID)? 'Nominated' : 'Nominate'}</button>
             </div>
         )
     })
     
     return (
-        <div>
+        <div className="moviescontainer">
+            <h3>Movie List</h3>
             {movies}
         </div>
     );

@@ -10,6 +10,7 @@ const Hero = ({searchString,setSearchString,placeholder}) => {
           onChange={(e)=>setSearchString(e.target.value)} 
           value={searchString}
           placeholder={placeholder}
+          
           />  
         </div>
     );

@@ -1,0 +1,30 @@
+
+.maincontainer {
+    display: grid;
+    border:1px solid blue ;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas: 
+    "hero hero"
+    "listmovies nominations";
+    text-align: center;
+    /* justify-items:center; */
+
+}
+
+.hero {
+    grid-area: hero;
+    padding: 10px;
+    border:1px solid red ;
+}
+.listmovies {
+    grid-area: listmovies;
+    padding: 10px;
+    border:1px solid red ;
+
+}
+.nominations {
+    grid-area: nominations;
+    padding: 10px;
+    border:1px solid red ;
+}
